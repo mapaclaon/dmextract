@@ -1,0 +1,19 @@
+# Enabling H2 Console
+spring:
+  h2:
+   console:
+      enabled: true
+
+# Datasource
+   datasource:
+      url: jdbc:h2:mem:testdb
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+
+   batch:
+      job:
+         enabled: false
+
+input:
+  file: classpath:user-data.csv
