@@ -1,6 +1,7 @@
 package com.nab.edcm.dmextract.batch;
 
 import com.nab.edcm.dmextract.persistence.models.DMExtract;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
@@ -12,10 +13,11 @@ import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Component;
 
-@Component
+@Configuration
+@Slf4j
 public class DMExtractBatchJob extends JobExecutionListenerSupport {
 
     @Autowired
@@ -28,22 +30,22 @@ public class DMExtractBatchJob extends JobExecutionListenerSupport {
     Resource resource;
 
     @Autowired
-    DMExtractProcessor processor;
+    DMExtractProcessor extractProcessor;
 
     @Autowired
-    DMExtractWriter writer;
+    DMExtractWriter extractWriter;
 
     @Bean(name = "dmExtractJob")
     public Job dmExtractJob() {
 
-        Step step = stepBuilderFactory.get("step-1")
+        Step step = stepBuilderFactory.get("step1")
                 .<DMExtract, DMExtract> chunk(1)
                 .reader(new DMExtractReader(resource))
-                .processor(processor)
-                .writer(writer)
+                .processor(extractProcessor)
+                .writer(extractWriter)
                 .build();
 
-        Job job = jobBuilderFactory.get("accounting-job")
+        Job job = jobBuilderFactory.get("job")
                 .incrementer(new RunIdIncrementer())
                 .listener(this)
                 .start(step)
@@ -55,7 +57,7 @@ public class DMExtractBatchJob extends JobExecutionListenerSupport {
     @Override
     public void afterJob(JobExecution jobExecution) {
         if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
-            System.out.println("BATCH JOB COMPLETED SUCCESSFULLY");
+            log.info("BATCH JOB COMPLETED SUCCESSFULLY");
         }
     }
 
