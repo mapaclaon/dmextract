@@ -16,4 +16,5 @@ public class DMExtract {
     private String fullname;
     private String houseName;
     private String tagLine;
+    private String status;
 }

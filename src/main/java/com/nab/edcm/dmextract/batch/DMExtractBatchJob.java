@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
 @Slf4j
@@ -39,10 +40,12 @@ public class DMExtractBatchJob extends JobExecutionListenerSupport {
     public Job dmExtractJob() {
 
         Step step = stepBuilderFactory.get("step1")
-                .<DMExtract, DMExtract> chunk(1)
+                .<DMExtract, DMExtract> chunk(2)
                 .reader(new DMExtractReader(resource))
                 .processor(extractProcessor)
                 .writer(extractWriter)
+                .taskExecutor(taskExecutor())
+                .throttleLimit(15)
                 .build();
 
         Job job = jobBuilderFactory.get("job")
@@ -61,4 +64,11 @@ public class DMExtractBatchJob extends JobExecutionListenerSupport {
         }
     }
 
+    @Bean
+    public ThreadPoolTaskExecutor taskExecutor(){
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setMaxPoolSize(15);
+        taskExecutor.setWaitForTasksToCompleteOnShutdown(false);
+        return taskExecutor;
+    }
 }

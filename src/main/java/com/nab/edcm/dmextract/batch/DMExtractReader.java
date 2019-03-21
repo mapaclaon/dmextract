@@ -16,7 +16,7 @@ public class DMExtractReader extends FlatFileItemReader<DMExtract> {
         setResource(resource);
 
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
-        lineTokenizer.setNames(new String[] { "id", "fullname", "houseName", "tagLine" });
+        lineTokenizer.setNames(new String[] { "id", "fullname", "houseName", "tagLine", "status" });
         lineTokenizer.setDelimiter(",");
         lineTokenizer.setStrict(false);
 
