@@ -6,6 +6,7 @@ import com.nab.edcm.dmextract.persistence.repo.DMExtractRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,9 @@ public class DMExtractWriter implements ItemWriter<TransformedDMExtract> {
 
     @Autowired
     private DMExtractRepository repo;
+
+    @Value("${file.path}")
+    private String filePath;
 
     @Override
     @Transactional
@@ -48,8 +52,8 @@ public class DMExtractWriter implements ItemWriter<TransformedDMExtract> {
     }
 
     private void saveToFiles(TransformedDMExtract file) {
-        Path filename1 = Paths.get("d://sample.csv");
-        Path filename2 = Paths.get("d://sample.json");
+        Path filename1 = Paths.get(filePath + "sample.csv");
+        Path filename2 = Paths.get(filePath + "sample.json");
         try (InputStream inputStream = file.getResource().getInputStream()){
             Files.copy(inputStream, filename1, StandardCopyOption.REPLACE_EXISTING);
             Files.write(filename2, ((TransformedDMExtract) file).getMetadataJson().getBytes());
@@ -62,8 +66,9 @@ public class DMExtractWriter implements ItemWriter<TransformedDMExtract> {
     }
 
     private void zipFiles(TransformedDMExtract file) throws IOException {
-        List<String> srcFiles = Arrays.asList("d://sample.json", "d://sample.csv");
-        FileOutputStream fos = new FileOutputStream("d://" + file.getId() + ".zip");
+        List<String> srcFiles = Arrays.asList(filePath + "sample.json",
+                filePath + "sample.csv");
+        FileOutputStream fos = new FileOutputStream(filePath + file.getId() + ".zip");
         ZipOutputStream zipOut = new ZipOutputStream(fos);
         for (String srcFile : srcFiles) {
             File fileToZip = new File(srcFile);

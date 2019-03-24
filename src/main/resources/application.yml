@@ -17,3 +17,7 @@ spring:
 
 input:
   file: classpath:user-data.csv
+
+#folder must be existing
+file:
+  path: d://output//
