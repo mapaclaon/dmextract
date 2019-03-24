@@ -1,6 +1,7 @@
 package com.nab.edcm.dmextract.persistence.models;
 
 import lombok.Data;
+import org.springframework.core.io.Resource;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Calendar;
+import java.util.Date;
+
 @RestController
 public class DMExtractController {
 
@@ -24,6 +27,7 @@ public class DMExtractController {
 
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString("source", "Spring Boot")
+                .addLong("time",System.currentTimeMillis())
                 .toJobParameters();
         jobLauncher.run(dmExtractJob, jobParameters);
 

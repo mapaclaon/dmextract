@@ -1,6 +1,7 @@
 package com.nab.edcm.dmextract.batch;
 
 import com.nab.edcm.dmextract.persistence.models.DMExtract;
+import com.nab.edcm.dmextract.persistence.models.TransformedDMExtract;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.Job;
@@ -40,7 +41,7 @@ public class DMExtractBatchJob extends JobExecutionListenerSupport {
     public Job dmExtractJob() {
 
         Step step = stepBuilderFactory.get("step1")
-                .<DMExtract, DMExtract> chunk(2)
+                .<DMExtract, TransformedDMExtract> chunk(2)
                 .reader(new DMExtractReader(resource))
                 .processor(extractProcessor)
                 .writer(extractWriter)
