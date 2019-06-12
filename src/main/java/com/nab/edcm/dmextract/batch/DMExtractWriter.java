@@ -5,6 +5,7 @@ import com.nab.edcm.dmextract.persistence.models.TransformedDMExtract;
 import com.nab.edcm.dmextract.persistence.repo.DMExtractRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

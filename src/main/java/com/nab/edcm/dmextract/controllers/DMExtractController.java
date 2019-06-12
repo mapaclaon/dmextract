@@ -24,6 +24,8 @@ public class DMExtractController {
 
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString("source", "Spring Boot")
+                .addLong("chunkSize", 3L)
+                .addLong("poolSize", 5L)
                 .addLong("time", System.currentTimeMillis())
                 .toJobParameters();
         jobLauncher.run(dmExtractJob, jobParameters);
